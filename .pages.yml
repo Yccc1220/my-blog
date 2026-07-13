@@ -1,0 +1,174 @@
+media:
+  - name: uploads
+    label: 图片资源
+    input: public/uploads
+    output: /uploads
+    extensions: [avif, webp, png, jpg, jpeg, gif]
+    rename: safe
+
+content:
+  - name: posts
+    label: 博客文章
+    type: collection
+    path: src/content/posts
+    format: yaml-frontmatter
+    subfolders: true
+    filename: "{primary}.md"
+    # ponytail: keep new media in public/uploads; exclude the existing local assets.
+    exclude: [images, cover.avif, mdx-example.mdx]
+    view:
+      fields: [title, published, draft, category]
+      primary: title
+      sort: [published, title]
+      search: [title, description, tags, category]
+      default:
+        sort: published
+        order: desc
+    fields:
+      - name: title
+        label: 标题
+        type: string
+        required: true
+      - name: published
+        label: 发布日期
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: updated
+        label: 更新日期
+        type: date
+        default: ""
+        options:
+          format: yyyy-MM-dd
+      - name: description
+        label: 摘要
+        type: text
+        default: ""
+      - name: image
+        label: 封面图片
+        type: image
+        default: ""
+        description: 可上传新封面；已有的 api 或相对路径会原样保留。
+        options:
+          media: uploads
+      - name: tags
+        label: 标签
+        type: string
+        list: true
+        default: []
+      - name: category
+        label: 分类
+        type: string
+        default: ""
+      - name: draft
+        label: 草稿
+        type: boolean
+        default: true
+      - name: pinned
+        label: 置顶
+        type: boolean
+        default: false
+      - name: comment
+        label: 开启评论
+        type: boolean
+        default: true
+      - name: lang
+        label: 文章语言
+        type: string
+        default: ""
+        description: 留空则使用站点语言，例如 zh_CN、en、ja。
+      - name: author
+        label: 原作者
+        type: string
+        default: ""
+      - name: sourceLink
+        label: 原文链接
+        type: string
+        default: ""
+      - name: licenseName
+        label: 许可名称
+        type: string
+        default: ""
+      - name: licenseUrl
+        label: 许可链接
+        type: string
+        default: ""
+      - name: password
+        label: 访问密码
+        type: string
+        default: ""
+      - name: passwordHint
+        label: 密码提示
+        type: string
+        default: ""
+      - name: body
+        label: 正文
+        type: rich-text
+        options:
+          format: markdown
+          media: uploads
+          switcher: true
+
+  - name: pages
+    label: 固定页面
+    type: group
+    items:
+      - name: about
+        label: 关于页面
+        type: file
+        path: src/content/spec/about.md
+        format: yaml-frontmatter
+        operations:
+          create: false
+          delete: false
+        fields:
+          - name: body
+            label: 正文
+            type: rich-text
+            options:
+              format: markdown
+              media: uploads
+              switcher: true
+      - name: guestbook
+        label: 留言板
+        type: file
+        path: src/content/spec/guestbook.md
+        format: yaml-frontmatter
+        operations:
+          create: false
+          delete: false
+        fields:
+          - name: title
+            label: 标题
+            type: string
+            required: true
+          - name: description
+            label: 描述
+            type: text
+          - name: body
+            label: 正文
+            type: rich-text
+            options:
+              format: markdown
+              media: uploads
+              switcher: true
+      - name: friends
+        label: 友链页面（MDX）
+        type: file
+        path: src/content/spec/friends.mdx
+        format: code
+        operations:
+          create: false
+          delete: false
+
+settings:
+  content:
+    merge: true
+  commit:
+    identity: user
+    templates:
+      create: "docs(content): add {filename}"
+      update: "docs(content): update {filename}"
+      delete: "docs(content): remove {filename}"
+      rename: "docs(content): rename {oldFilename} to {newFilename}"

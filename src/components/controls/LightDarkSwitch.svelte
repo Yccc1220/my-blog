@@ -28,9 +28,21 @@ let mode: LIGHT_DARK_MODE = $state(LIGHT_MODE);
 let displayedMode: LIGHT_DARK_MODE = $state(LIGHT_MODE); // 显示的实际主题（在system模式下会随系统变化）
 
 function switchScheme(newMode: LIGHT_DARK_MODE) {
-	mode = newMode;
-	setTheme(newMode);
-	updateDisplayedMode();
+	const applyScheme = () => {
+		mode = newMode;
+		setTheme(newMode);
+		updateDisplayedMode();
+	};
+
+	if (
+		typeof document.startViewTransition !== "function" ||
+		window.matchMedia("(prefers-reduced-motion: reduce)").matches
+	) {
+		applyScheme();
+		return;
+	}
+
+	document.startViewTransition(applyScheme);
 }
 
 // 更新显示的主题（用于显示当前实际主题）

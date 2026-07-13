@@ -239,8 +239,9 @@ const siteLang = lang.replace("_", "-");
       define:vars={{
         BANNER_HEIGHT_EXTEND,
         PAGE_WIDTH,
-        configHue,
-        defaultMode: siteConfig.themeColor.defaultMode ?? "light",
+		configHue,
+		isThemeColorFixed: siteConfig.themeColor.fixed,
+		defaultMode: siteConfig.themeColor.defaultMode ?? "light",
         defaultWallpaperMode: backgroundWallpaper.mode,
         isWallpaperSwitchable:
           backgroundWallpaper.switchable ?? true,
@@ -289,9 +290,12 @@ const siteLang = lang.replace("_", "-");
         isDark ? darkTheme : lightTheme
       );
 
-      // Load the hue from local storage
-      const hue = localStorage.getItem("hue") || configHue;
-      document.documentElement.style.setProperty("--hue", hue);
+	  // 固定主题色时忽略并清理旧的用户偏好
+	  const hue = isThemeColorFixed
+		? configHue
+		: localStorage.getItem("hue") || configHue;
+	  if (isThemeColorFixed) localStorage.removeItem("hue");
+	  document.documentElement.style.setProperty("--hue", hue);
 
       // 设置卡片透明度（全屏透明模式下使用），优先使用用户自定义值
       const storedCardOpacity = localStorage.getItem("overlayCardOpacity");

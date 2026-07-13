@@ -72,52 +72,31 @@ html {
 
 @layer components {
     /* View Transitions API 主题切换动画 */
-    /* 为整个文档根元素设置视图过渡 */
     ::view-transition-old(root),
     ::view-transition-new(root) {
-        animation-duration: 0.5s;
-        animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-        /* 使用混合模式使颜色过渡更平滑 */
+        animation: none;
         mix-blend-mode: normal;
     }
-    
-    /* 视图过渡组 - 使用交叉淡化效果 */
+
     ::view-transition-group(root) {
-        animation-duration: 0.5s;
-        animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        animation: none;
     }
-    
-    /* 淡出旧视图 - 使用更平滑的曲线 */
+
     ::view-transition-old(root) {
-        animation-name: theme-fade-out;
-        /* 确保背景色同步切换 */
-        z-index: 2;
-    }
-    
-    /* 淡入新视图 - 使用更平滑的曲线 */
-    ::view-transition-new(root) {
-        animation-name: theme-fade-in;
-        /* 确保新视图在上层 */
         z-index: 1;
     }
-    
-    /* 定义淡出动画 - 使用更平滑的缓动函数 */
-    @keyframes theme-fade-out {
-        0% {
-            opacity: 1;
-        }
-        100% {
-            opacity: 0;
-        }
+
+    ::view-transition-new(root) {
+        z-index: 2;
+        animation: theme-diagonal-reveal 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
     }
-    
-    /* 定义淡入动画 - 从下层淡入 */
-    @keyframes theme-fade-in {
-        0% {
-            opacity: 0;
+
+    @keyframes theme-diagonal-reveal {
+        from {
+            clip-path: polygon(0 100%, 0 100%, 0 100%);
         }
-        100% {
-            opacity: 1;
+        to {
+            clip-path: polygon(0 100%, 0 -100%, 200% 100%);
         }
     }
     
@@ -586,4 +565,3 @@ html {
 .pagination-info {
   @apply text-sm text-(--text-secondary) text-center mb-2;
 }
-
