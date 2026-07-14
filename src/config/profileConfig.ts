@@ -12,7 +12,7 @@ export const profileConfig: ProfileConfig = {
 	name: "NGC2244",
 
 	// 个人签名
-	bio: "目前还在读书，对计算光学成像、显微成像、大模型和目标检测等方面感兴趣。",
+	bio: "Hello, I'm NGC2244.",
 
 	// 链接配置
 	// 已经预装的图标集：fa7-brands，fa7-regular，fa7-solid，material-symbols，simple-icons
@@ -30,7 +30,7 @@ export const profileConfig: ProfileConfig = {
 		{
 			name: "Email",
 			icon: "fa7-solid:envelope",
-			url: "mailto:gychb@outlook.com",
+			url: "mailto:happy-gyc@qq.com",
 			showName: false,
 		},
 		{

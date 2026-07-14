@@ -1,0 +1,270 @@
+---
+const meteors = [
+	{ top: "8%", delay: "-1s", duration: "9s" },
+	{ top: "24%", delay: "-5s", duration: "12s" },
+	{ top: "42%", delay: "-8s", duration: "14s" },
+];
+
+const snowflakes = Array.from({ length: 20 }, (_, index) => ({
+	left: `${(index * 37) % 100}%`,
+	delay: `${-((index * 13) % 90) / 10}s`,
+	duration: `${8 + (index % 6) * 1.2}s`,
+	drift: `${-28 + (index % 8) * 8}px`,
+	size: `${2 + (index % 4)}px`,
+}));
+---
+
+<div id="ambient-effects" aria-hidden="true">
+	<div class="ambient-sky">
+		<div class="star-layer star-layer-near"></div>
+		<div class="star-layer star-layer-far"></div>
+		<div class="meteor-field">
+			{
+				meteors.map((meteor) => (
+					<span
+						class="meteor"
+						style={`--meteor-top:${meteor.top};--meteor-delay:${meteor.delay};--meteor-duration:${meteor.duration}`}
+					></span>
+				))
+			}
+		</div>
+	</div>
+
+	<div class="snow-field">
+		{
+			snowflakes.map((flake) => (
+				<span
+					class="snowflake"
+					style={`--snow-left:${flake.left};--snow-delay:${flake.delay};--snow-duration:${flake.duration};--snow-drift:${flake.drift};--snow-size:${flake.size}`}
+				></span>
+			))
+		}
+	</div>
+
+	<div id="ambient-feedback"></div>
+</div>
+
+<script is:inline>
+	(function initAmbientEffects() {
+		if (window.ambientEffectsInitialized) return;
+		window.ambientEffectsInitialized = true;
+
+		var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+		var finePointer = window.matchMedia('(pointer: fine)');
+		var lastTrailAt = 0;
+
+		function createFeedback(className, x, y) {
+			var host = document.getElementById('ambient-feedback');
+			if (!host) return;
+			var element = document.createElement('span');
+			element.className = className;
+			element.style.left = x + 'px';
+			element.style.top = y + 'px';
+			host.appendChild(element);
+			element.addEventListener('animationend', function () {
+				element.remove();
+			}, { once: true });
+		}
+
+		function handlePointerMove(event) {
+			if (reduceMotion.matches || !finePointer.matches || event.pointerType === 'touch') return;
+			var now = performance.now();
+			if (now - lastTrailAt < 48) return;
+			lastTrailAt = now;
+			createFeedback('cursor-trail-particle', event.clientX, event.clientY);
+		}
+
+		function handlePointerDown(event) {
+			if (reduceMotion.matches || !event.isPrimary) return;
+			createFeedback('click-ripple', event.clientX, event.clientY);
+		}
+
+		window.addEventListener('pointermove', handlePointerMove, { passive: true });
+		window.addEventListener('pointerdown', handlePointerDown, { passive: true });
+	})();
+</script>
+
+<style is:global>
+	#ambient-effects,
+	#ambient-effects * {
+		pointer-events: none;
+	}
+
+	.ambient-sky,
+	.snow-field,
+	#ambient-feedback {
+		position: fixed;
+		inset: 0;
+		overflow: hidden;
+	}
+
+	.ambient-sky {
+		z-index: 12;
+	}
+
+	.snow-field {
+		z-index: 22;
+	}
+
+	#ambient-feedback {
+		z-index: 90;
+	}
+
+	.star-layer {
+		position: absolute;
+		inset: -16%;
+		background-image:
+			radial-gradient(circle, rgb(255 255 255 / 0.8) 0 1px, transparent 1.5px),
+			radial-gradient(circle, oklch(0.84 0.08 var(--hue) / 0.7) 0 1px, transparent 1.8px);
+		background-position: 0 0, 37px 51px;
+		background-size: 89px 89px, 149px 149px;
+		opacity: 0.38;
+		animation: ambient-star-drift 38s linear infinite alternate;
+		will-change: transform;
+	}
+
+	.star-layer-far {
+		--star-scale: 0.78;
+		background-position: 23px 17px, 71px 93px;
+		background-size: 131px 131px, 211px 211px;
+		opacity: 0.26;
+		animation-duration: 56s;
+	}
+
+	.star-layer-near {
+		--star-scale: 1;
+	}
+
+	.meteor {
+		position: absolute;
+		top: var(--meteor-top);
+		right: -10rem;
+		width: 9rem;
+		height: 1px;
+		border-radius: 999px;
+		background: linear-gradient(90deg, transparent, oklch(0.9 0.08 var(--hue) / 0.95));
+		opacity: 0;
+		filter: drop-shadow(0 0 4px oklch(0.82 0.1 var(--hue) / 0.45));
+		animation: ambient-meteor var(--meteor-duration) ease-in infinite;
+		animation-delay: var(--meteor-delay);
+		will-change: transform, opacity;
+	}
+
+	.meteor::after {
+		content: "";
+		position: absolute;
+		right: 0;
+		top: 50%;
+		width: 4px;
+		height: 4px;
+		border-radius: 50%;
+		background: rgb(255 255 255 / 0.95);
+		transform: translateY(-50%);
+	}
+
+	.snowflake {
+		position: absolute;
+		top: -1rem;
+		left: var(--snow-left);
+		width: var(--snow-size);
+		height: var(--snow-size);
+		border-radius: 50%;
+		background: oklch(0.95 0.025 var(--hue) / 0.82);
+		box-shadow: 0 0 5px rgb(255 255 255 / 0.28);
+		animation: ambient-snow-fall var(--snow-duration) linear infinite;
+		animation-delay: var(--snow-delay);
+		will-change: transform, opacity;
+	}
+
+	.cursor-trail-particle,
+	.click-ripple {
+		position: absolute;
+		transform: translate(-50%, -50%);
+	}
+
+	.cursor-trail-particle {
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: oklch(0.82 0.13 var(--hue));
+		box-shadow: 0 0 9px oklch(0.82 0.13 var(--hue) / 0.45);
+		animation: ambient-cursor-spark 700ms ease-out forwards;
+	}
+
+	.click-ripple {
+		width: 16px;
+		height: 16px;
+		border: 2px solid oklch(0.76 0.14 var(--hue) / 0.75);
+		border-radius: 50%;
+		animation: ambient-click-ripple 720ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+	}
+
+	@keyframes ambient-star-drift {
+		from {
+			transform: translate3d(0, 0, 0) scale(var(--star-scale));
+		}
+		to {
+			transform: translate3d(-4%, 3%, 0) scale(var(--star-scale));
+		}
+	}
+
+	@keyframes ambient-meteor {
+		0%, 68% {
+			opacity: 0;
+			transform: translate3d(0, 0, 0) rotate(-34deg);
+		}
+		72% {
+			opacity: 0.9;
+		}
+		86%, 100% {
+			opacity: 0;
+			transform: translate3d(-72vw, 54vh, 0) rotate(-34deg);
+		}
+	}
+
+	@keyframes ambient-snow-fall {
+		0% {
+			opacity: 0;
+			transform: translate3d(0, -3vh, 0) rotate(0deg);
+		}
+		12% {
+			opacity: 0.72;
+		}
+		100% {
+			opacity: 0;
+			transform: translate3d(var(--snow-drift), 105vh, 0) rotate(180deg);
+		}
+	}
+
+	@keyframes ambient-cursor-spark {
+		to {
+			opacity: 0;
+			transform: translate(-50%, -50%) translate3d(0, -14px, 0) scale(0.2);
+		}
+	}
+
+	@keyframes ambient-click-ripple {
+		to {
+			opacity: 0;
+			transform: translate(-50%, -50%) scale(5.5);
+		}
+	}
+
+	:root:not(.dark) .star-layer {
+		opacity: 0.2;
+	}
+
+	@media (max-width: 767px) {
+		.meteor:nth-child(n + 2),
+		.snowflake:nth-child(n + 11),
+		#ambient-feedback {
+			display: none;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		#ambient-effects {
+			display: none;
+		}
+	}
+</style>

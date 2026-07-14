@@ -36,8 +36,13 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 	// 留言板
 	links.push(LinkPresets.Guestbook);
 
-	// 关于页面
-	links.push(LinkPresets.About);
+	// 关于及其子菜单
+	links.push({
+		name: "关于",
+		url: "#",
+		icon: "material-symbols:info",
+		children: [LinkPresets.About, LinkPresets.Sponsor],
+	});
 
 	// GitHub
 	links.push({

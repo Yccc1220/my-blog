@@ -6,6 +6,7 @@ import UmamiAnalytics from "@components/analytics/UmamiAnalytics.astro";
 import FancyboxManager from "@components/features/FancyboxManager.astro";
 import FontSetup from "@components/features/FontSetup.astro";
 import MusicManager from "@components/features/MusicManager.astro";
+import AmbientEffects from "@components/features/AmbientEffects.astro";
 import SakuraEffect from "@components/features/SakuraEffect.astro";
 import ConfigCarrier from "@components/layout/ConfigCarrier.astro";
 
@@ -65,9 +66,7 @@ let pageTitle: string;
 if (title) {
 	pageTitle = `${title} - ${siteConfig.title}`;
 } else {
-	pageTitle = siteConfig.subtitle
-		? `${siteConfig.title} - ${siteConfig.subtitle}`
-		: siteConfig.title;
+	pageTitle = siteConfig.title;
 }
 
 let ogImageUrl: string | undefined;
@@ -578,8 +577,8 @@ const siteLang = lang.replace("_", "-");
     <ConfigCarrier />
     <MusicManager />
     <slot />
-
-
+	<!-- 星空、流星、雪花与指针反馈 -->
+	<AmbientEffects />
 
     <!-- Sakura Effect -->
     <SakuraEffect />

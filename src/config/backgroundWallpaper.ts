@@ -2,13 +2,13 @@ import type { BackgroundWallpaperConfig } from "@/types/backgroundWallpaper";
 
 export const backgroundWallpaper: BackgroundWallpaperConfig = {
 	// 壁纸模式："banner" 横幅壁纸，"fullscreen" 全屏壁纸，"overlay" 全屏透明，"none" 纯色背景无壁纸
-	mode: "none",
+	mode: "fullscreen",
 	// 是否允许用户通过导航栏切换壁纸模式
 	// 且同时维护多种壁纸模式过于复杂（已经屎山代码），在切换时有时候可能会出现一些奇怪的过渡效果或者bug
 	// 推荐只选择自己喜欢的模式并关闭切换功能
-	switchable: false,
+	switchable: true,
 	// 是否启用背景视频播放，配置后将在导航栏显示视频播放按钮
-	playerEnable: false,
+	playerEnable: true,
 	/**
 	 * 背景图片配置
 	 * 图片路径支持三种格式：
@@ -42,10 +42,30 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 	src: {
 		// 桌面背景图片（支持单张或多张随机）
 		// desktop: "assets/images/DesktopWallpaper/d1.avif",
-		desktop: "assets/images/DesktopWallpaper/d3.avif",
+		desktop: [
+			"assets/images/DesktopWallpaper/ngc2244-blue-geometry.avif",
+			"assets/images/DesktopWallpaper/ngc2244-blue-smoke.avif",
+			"assets/images/DesktopWallpaper/ngc2244-blue-swirl.avif",
+		],
 		// 移动背景图片（支持单张或多张随机）
 		// mobile: "assets/images/MobileWallpaper/m1.avif",
-		mobile: "assets/images/MobileWallpaper/m1.avif",
+		mobile: [
+			"assets/images/MobileWallpaper/ngc2244-blue-geometry.avif",
+			"assets/images/MobileWallpaper/ngc2244-blue-smoke.avif",
+			"assets/images/MobileWallpaper/ngc2244-blue-swirl.avif",
+		],
+		light: {
+			desktop: [
+				"assets/images/DesktopWallpaper/ngc2244-light-ribbon.avif",
+				"assets/images/DesktopWallpaper/ngc2244-light-optics.avif",
+				"assets/images/DesktopWallpaper/ngc2244-light-ice.avif",
+			],
+			mobile: [
+				"assets/images/MobileWallpaper/ngc2244-light-ribbon.avif",
+				"assets/images/MobileWallpaper/ngc2244-light-optics.avif",
+				"assets/images/MobileWallpaper/ngc2244-light-ice.avif",
+			],
+		},
 		// 背景视频播放地址
 		// 支持单个视频路径（字符串）或多个视频循环（数组）
 		// 支持远程视频URL，本地视频请放在 public/assets/videos/ 目录下
@@ -63,22 +83,26 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 		// 主页横幅文字
 		homeText: {
 			// 是否启用主页横幅文字
-			enable: false,
+			enable: true,
 			// 是否允许用户通过控制面板切换横幅标题显示
-			switchable: false,
+			switchable: true,
 			// 主页横幅主标题
 			title: "欢迎回来，这是NGC2244的博客",
 			// 主页横幅主标题字体大小
 			titleSize: "3.2rem",
 			// 主页横幅副标题
-			subtitle: ["记录学习，也记录尚未想明白的问题"],
+			subtitle: [
+				"记录学习，也记录尚未想明白的问题",
+				"计算光学、显微成像与智能视觉",
+				"在星光与代码之间继续探索",
+			],
 			// 主页横幅副标题字体大小
 			subtitleSize: "1.25rem",
 			typewriter: {
 				// 是否启用打字机效果
 				// 打字机开启 → 循环显示所有副标题
 				// 打字机关闭 → 每次刷新随机显示一条副标题
-				enable: false,
+				enable: true,
 				// 打字速度（毫秒）
 				speed: 100,
 				// 删除速度（毫秒）
@@ -100,36 +124,36 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 		waves: {
 			enable: {
 				// 桌面端是否启用水波纹动画效果
-				desktop: false,
+				desktop: true,
 				// 移动端是否启用水波纹动画效果
 				mobile: false,
 			},
 			// 是否允许用户通过控制面板切换水波纹动画
-			switchable: false,
+			switchable: true,
 		},
 		// 渐变过渡效果配置，当水波纹关闭时自动启用，提供壁纸底部到背景色的平滑过渡
 		gradient: {
 			enable: {
 				// 桌面端是否启用渐变过渡
-				desktop: false,
+				desktop: true,
 				// 移动端是否启用渐变过渡
-				mobile: false,
+				mobile: true,
 			},
 			// 渐变高度
 			height: "10%",
 			// 是否允许用户通过控制面板切换渐变过渡
-			switchable: false,
+			switchable: true,
 		},
 		// 壁纸轮播配置，横幅壁纸和全屏壁纸共享，仅在配置多张图片时生效
 		carousel: {
 			// 是否启用壁纸轮播；关闭时保持每次刷新随机显示一张
-			enable: false,
+			enable: true,
 			// 轮播切换间隔（毫秒）
-			interval: 5000,
+			interval: 8000,
 			// 过渡效果: 'fade' 渐变 | 'zoom' 缩放 | 'slide' 滑动 | 'kenburns' 旋转木马
-			transitionEffect: "zoom",
+			transitionEffect: "kenburns",
 			// 是否允许用户通过控制面板切换壁纸轮播
-			switchable: false,
+			switchable: true,
 		},
 	},
 	// Banner模式特有配置

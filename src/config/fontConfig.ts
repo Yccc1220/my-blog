@@ -68,6 +68,34 @@ export const fontsList: FontDefinition[] = [
 			"monospace",
 		],
 	},
+	{
+		name: "LXGW WenKai",
+		cssVariable: "--font-lxgw-wenkai",
+		provider: "local",
+		display: "swap",
+		options: {
+			variants: [
+				{
+					src: ["./public/assets/fonts/LXGWWenKai-Regular.ttf"],
+					weight: "400",
+					style: "normal",
+				},
+				{
+					src: ["./public/assets/fonts/LXGWWenKai-Medium.ttf"],
+					weight: "500",
+					style: "normal",
+				},
+			],
+		},
+		fallbacks: [
+			"Kaiti SC",
+			"STKaiti",
+			"KaiTi",
+			"Microsoft YaHei",
+			"PingFang SC",
+			"serif",
+		],
+	},
 	// ─── 本地字体示例 ───
 	// 使用步骤：
 	// 1. 将 TTF/OTF/WOFF2 字体文件放在 public/assets/fonts/ 目录下
@@ -94,22 +122,27 @@ export const fontConfig: FontSelectionConfig = {
 	enable: true,
 	// 当前选择的字体 CSS 变量名（对应上方 fonts 中的 cssVariable）
 	// 使用 "system" 表示系统字体（不加载任何自定义字体）
-	selected: ["--font-zen-maru-gothic"],
+	selected: ["--font-lxgw-wenkai"],
 
 	// 各区域独立字体设置（填写上方 fonts 中的 cssVariable，留空则使用全局 selected 字体）
 	// 例如：bannerTitleFont: "--font-inter", 表示主页横幅主标题使用 Inter 字体
 	// 主页横幅主标题字体
-	bannerTitleFont: "--font-zen-maru-gothic",
+	bannerTitleFont: "--font-lxgw-wenkai",
 	// 主页横幅副标题字体
-	bannerSubtitleFont: "--font-zen-maru-gothic",
+	bannerSubtitleFont: "--font-lxgw-wenkai",
 	// 导航栏标题字体
-	navbarTitleFont: "--font-zen-maru-gothic",
+	navbarTitleFont: "--font-lxgw-wenkai",
 	// 代码块字体（用于代码高亮和等宽字体场景）
 	codeFont: "--font-jetbrains-mono",
 
 	// 本地字体子集化配置（构建时由 scripts/subset-fonts.ts 处理）
 	// key 为 fonts 数组中对应的 cssVariable，value 为子集化选项
 	subsetFonts: {
+		"--font-lxgw-wenkai": {
+			// 评论等动态内容未必出现在构建产物中，保留常用标点与英文字符。
+			extraChars:
+				"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789，。！？：；、（）【】《》“”‘’—…·@#%&+-_=/. ",
+		},
 		"--font-greatvibes": {
 			// 额外包含的字符
 			extraChars: "",

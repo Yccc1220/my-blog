@@ -14,7 +14,7 @@
 ## 联系方式
 
 - GitHub：[Yccc1220](https://github.com/Yccc1220/)
-- Email：[gychb@outlook.com](mailto:gychb@outlook.com)
+- Email：[happy-gyc@qq.com](mailto:happy-gyc@qq.com)
 
 ## 关于本站
 

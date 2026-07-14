@@ -6,7 +6,7 @@ const SITE_LANG = "zh_CN";
 
 export const siteConfig: SiteConfig = {
 	// 站点标题
-	title: "欢迎回来，这是NGC2244的博客",
+	title: "Happy-gyc 博客",
 
 	// 站点副标题
 	subtitle: "记录学习，也记录尚未想明白的问题",
@@ -35,7 +35,7 @@ export const siteConfig: SiteConfig = {
 		// 主题色的默认色相，范围从 0 到 360。例如：红色：0，青色：200，蓝绿色：250，粉色：345
 		hue: 265,
 		// 是否对访问者隐藏主题色选择器
-		fixed: true,
+		fixed: false,
 		// 默认模式："light" 亮色，"dark" 暗色，"system" 跟随系统
 		defaultMode: "system",
 	},
@@ -102,7 +102,7 @@ export const siteConfig: SiteConfig = {
 		// 友链页面开关
 		friends: false,
 		// 打赏页面开关
-		sponsor: false,
+		sponsor: true,
 		// 留言板页面开关，需要配置评论系统
 		guestbook: true,
 		// 番组计划页面开关，含追番、游戏、书籍和音乐
@@ -126,7 +126,7 @@ export const siteConfig: SiteConfig = {
 		// 移动端默认布局模式，不设置则跟随 defaultMode
 		mobileDefaultMode: "list",
 		// 是否允许用户切换布局
-		allowSwitch: false,
+		allowSwitch: true,
 		// 文章简介显示行数，设为 0 则不截断
 		descriptionLines: 2,
 		// 文章卡片底部统计和发布日期是否显示图标

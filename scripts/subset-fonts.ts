@@ -163,6 +163,24 @@ function detectFontFormat(
 	}
 }
 
+async function findBuiltFontAsset(
+	fontBuffer: Buffer,
+): Promise<string | undefined> {
+	const candidates = await glob(`${OUTPUT_DIR}/*`);
+	for (const candidate of candidates) {
+		const stat = await fs.stat(candidate);
+		if (!stat.isFile() || stat.size !== fontBuffer.length) continue;
+
+		const candidateBuffer = await fs.readFile(candidate);
+		if (candidateBuffer.equals(fontBuffer)) return candidate;
+	}
+	return undefined;
+}
+
+function toDistUrl(filePath: string): string {
+	return `/${path.relative(DIST_DIR, filePath).split(path.sep).join("/")}`;
+}
+
 // ─── 主流程 ──────────────────────────────────────────────
 
 interface SubsetResult {
@@ -174,6 +192,7 @@ interface SubsetResult {
 	hash: string;
 	format: string;
 	originalSrc: string;
+	builtSrc?: string;
 }
 
 async function main() {
@@ -236,6 +255,12 @@ async function main() {
 
 		const fontBuffer = await fs.readFile(fontPath);
 		const originalFormat = detectFontFormat(fontPath);
+		const builtSrc = await findBuiltFontAsset(fontBuffer);
+		if (!builtSrc) {
+			console.warn(
+				`   ⚠ Could not locate Astro's built asset for '${font.id}'.`,
+			);
+		}
 
 		try {
 			const subsetBuffer = await subsetFont(fontBuffer, chars, {
@@ -267,6 +292,7 @@ async function main() {
 				hash,
 				format: originalFormat,
 				originalSrc: font.src,
+				builtSrc,
 			});
 		} catch (err) {
 			console.error(`   ❌ Failed to subset '${font.id}':`, err);
@@ -289,11 +315,34 @@ async function main() {
 
 		for (const result of results) {
 			const placeholder = `__SUBSET_FONT_${result.id}__`;
-			if (content.includes(placeholder)) {
-				const subsetUrl = `/_astro/fonts/${result.hash}.woff2`;
-				content = content.replaceAll(placeholder, subsetUrl);
-				replaced = true;
+			const subsetUrl = `/_astro/fonts/${result.hash}.woff2`;
+			const before = content;
+
+			content = content.replaceAll(placeholder, subsetUrl);
+			if (result.builtSrc) {
+				const builtUrl = toDistUrl(result.builtSrc);
+				content = content
+					.replaceAll(
+						`url("${builtUrl}") format("${result.format}")`,
+						`url("${subsetUrl}") format("woff2")`,
+					)
+					.replaceAll(
+						`url('${builtUrl}') format('${result.format}')`,
+						`url('${subsetUrl}') format('woff2')`,
+					)
+					.replaceAll(`href="${builtUrl}"`, `href="${subsetUrl}"`)
+					.replaceAll(`href='${builtUrl}'`, `href='${subsetUrl}'`)
+					.replaceAll(
+						`href="${subsetUrl}" as="font" type="font/ttf"`,
+						`href="${subsetUrl}" as="font" type="font/woff2"`,
+					)
+					.replaceAll(
+						`href="${subsetUrl}" as="font" type="font/otf"`,
+						`href="${subsetUrl}" as="font" type="font/woff2"`,
+					);
 			}
+
+			if (content !== before) replaced = true;
 		}
 
 		if (replaced) {
@@ -311,12 +360,15 @@ async function main() {
 				? result.originalSrc.slice(1)
 				: result.originalSrc,
 		);
-		try {
-			await fs.access(originalInDist);
-			await fs.unlink(originalInDist);
-			console.log(`   ✔ Removed: ${originalInDist}`);
-		} catch {
-			// 文件可能不存在，忽略
+		for (const file of [originalInDist, result.builtSrc]) {
+			if (!file) continue;
+			try {
+				await fs.access(file);
+				await fs.unlink(file);
+				console.log(`   ✔ Removed: ${file}`);
+			} catch {
+				// 文件可能不存在，忽略
+			}
 		}
 	}
 

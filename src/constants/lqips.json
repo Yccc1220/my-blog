@@ -34,5 +34,17 @@
   "src:content/posts/images/both-grid.avif": "d5d6d3e6e7e3d8d9e3",
   "src:content/posts/images/1.avif": "b5b0b3bcb6bbe0e0df",
   "src:content/posts/guide/cover.avif": "c8bca9dde6d2babfb5",
-  "public:assets/images/avatar.png": "1e2552242421222220"
+  "public:assets/images/avatar.png": "1e2552242421222220",
+  "src:assets/images/MobileWallpaper/ngc2244-blue-geometry.avif": "02050a02060e020914",
+  "src:assets/images/DesktopWallpaper/ngc2244-blue-geometry.avif": "02060d030b19020810",
+  "src:assets/images/MobileWallpaper/ngc2244-blue-swirl.avif": "1114120f1a2217191c",
+  "src:assets/images/MobileWallpaper/ngc2244-blue-smoke.avif": "011b3a001329001024",
+  "src:assets/images/DesktopWallpaper/ngc2244-blue-swirl.avif": "101719111b28111a27",
+  "src:assets/images/DesktopWallpaper/ngc2244-blue-smoke.avif": "011428011528001024",
+  "src:assets/images/MobileWallpaper/ngc2244-light-ribbon.avif": "e9f0f2ebf9fe4f69b7",
+  "src:assets/images/MobileWallpaper/ngc2244-light-optics.avif": "c7cbdbafbfda9eb3cf",
+  "src:assets/images/MobileWallpaper/ngc2244-light-ice.avif": "99c6e6a3cae998c7e8",
+  "src:assets/images/DesktopWallpaper/ngc2244-light-ribbon.avif": "c9d9e3c8deec435ca5",
+  "src:assets/images/DesktopWallpaper/ngc2244-light-optics.avif": "c6cedd5e79b35777b1",
+  "src:assets/images/DesktopWallpaper/ngc2244-light-ice.avif": "94c7eca2ceee99c1df"
 }

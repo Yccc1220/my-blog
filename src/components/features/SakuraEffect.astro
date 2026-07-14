@@ -172,23 +172,30 @@ const config = sakuraConfig;
 				if (!this.config.enable || this.isRunning) {
 					return;
 				}
+				this.isRunning = true;
 
 				// 创建图片对象
 				this.img = new Image();
 				this.img.src = '/assets/images/effects/sakura.png'; // 使用樱花图片
 
 				// 等待图片加载完成
-				await new Promise((resolve, reject) => {
-					if (this.img) {
-						this.img.onload = () => resolve();
-						this.img.onerror = () => reject(new Error('Failed to load sakura image'));
-					}
-				});
+				try {
+					await new Promise((resolve, reject) => {
+						if (this.img) {
+							this.img.onload = () => resolve();
+							this.img.onerror = () => reject(new Error('Failed to load sakura image'));
+						}
+					});
+				} catch (error) {
+					this.isRunning = false;
+					throw error;
+				}
+
+				if (!this.isRunning) return;
 
 				this.createCanvas();
 				this.createSakuraList();
 				this.startAnimation();
-				this.isRunning = true;
 			}
 
 			// 创建画布
@@ -320,8 +327,7 @@ const config = sakuraConfig;
 		}
 
 		// 创建全局樱花管理器实例
-		let globalSakuraManager = null;
-		window.sakuraManager = null;
+		let globalSakuraManager = window.sakuraManager || null;
 
 		// 初始化樱花特效
 		function initSakura(config) {
@@ -364,15 +370,18 @@ const config = sakuraConfig;
 		})();
 
 		// 监听设置面板的樱花特效切换事件
-		window.addEventListener('sakuraToggle', function(e) {
-			var enabled = e.detail.enabled;
-			var mgr = window.sakuraManager;
-			if (!mgr) return;
-			if (enabled && !mgr.getIsRunning()) {
-				mgr.config.enable = true;
-				mgr.init();
-			} else if (!enabled && mgr.getIsRunning()) {
-				mgr.stop();
-			}
-		});
+		if (!window.sakuraToggleHandler) {
+			window.sakuraToggleHandler = function(e) {
+				var enabled = e.detail.enabled;
+				var mgr = window.sakuraManager;
+				if (!mgr) return;
+				mgr.config.enable = enabled;
+				if (enabled) {
+					mgr.init();
+				} else {
+					mgr.stop();
+				}
+			};
+			window.addEventListener('sakuraToggle', window.sakuraToggleHandler);
+		}
 	</script>
