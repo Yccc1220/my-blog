@@ -12,7 +12,7 @@ export const siteConfig: SiteConfig = {
 	subtitle: "记录学习，也记录尚未想明白的问题",
 
 	// 站点 URL
-	site_url: "https://gyc.os.kg",
+	site_url: "https://gyc-blog.cc.cd",
 
 	// 站点描述
 	description:
