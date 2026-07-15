@@ -469,7 +469,7 @@ const wallpaperThemes = backgroundImages.isThemeSpecific
 
             function isBannerWallpaperMode() {
                 var mode = document.documentElement.getAttribute('data-wallpaper-mode');
-                return mode === WALLPAPER_BANNER || mode === 'fullscreen';
+                return mode === WALLPAPER_BANNER || mode === 'fullscreen' || mode === 'overlay';
             }
 
             // 获取当前设备可见的 slide-item
@@ -611,7 +611,7 @@ const wallpaperThemes = backgroundImages.isThemeSpecific
                 e.detail && e.detail.enabled ? startAutoPlay() : stopAutoPlay();
             });
             window.addEventListener('wallpaperModeChange', function(e) {
-                if (e.detail && (e.detail.mode === 'banner' || e.detail.mode === 'fullscreen')) {
+                if (e.detail && (e.detail.mode === 'banner' || e.detail.mode === 'fullscreen' || e.detail.mode === 'overlay')) {
                     if (isCarouselEnabled()) startAutoPlay();
                 } else {
                     stopAutoPlay();
