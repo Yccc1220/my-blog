@@ -46,12 +46,10 @@ content:
         type: text
         default: ""
       - name: image
-        label: 封面图片
-        type: image
+        label: 封面图片 URL
+        type: string
         default: ""
-        description: 可上传新封面；已有的 api 或相对路径会原样保留。
-        options:
-          media: uploads
+        description: 粘贴图床完整 URL；也支持 api 或现有相对路径。
       - name: tags
         label: 标签
         type: string
