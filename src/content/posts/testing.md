@@ -7,5 +7,6 @@ draft: false
 pinned: false
 comment: false
 lang: zh_CN
+category: 文章示例
 ---
 测试用的
